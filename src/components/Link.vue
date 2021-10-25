@@ -1,5 +1,5 @@
 <template>
-  <FileExplorerItem :selected="selected" v-on="$listeners">
+  <FileExplorerItem v-bind="$props" v-on="$listeners">
     <template #icon>
       <IconLink />
     </template>
@@ -21,6 +21,8 @@ export default {
   },
   props: {
     name: String,
+    level: Number,
+    index: Number,
     selected: Boolean
   }
 };

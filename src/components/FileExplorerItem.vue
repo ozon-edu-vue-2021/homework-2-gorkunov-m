@@ -1,18 +1,21 @@
-<template functional>
+<template>
   <div
     :class="[
       'FileExplorerItem',
       {
-        '-opened': props.opened,
-        '-selected': props.selected
+        '-opened': opened,
+        '-selected': selected,
+        '-disabled': !active
       }
     ]"
-    :tabindex="props.focusable ? 0 : null"
-    @keypress.space.enter.prevent="listeners['select'] && listeners['select']()"
-    @keydown.right="listeners['open'] && listeners['open']()"
-    @keydown.left="listeners['close'] && listeners['close']()"
-    @click="listeners['select'] && listeners['select']()"
-    @focus="listeners['focus'] && listeners['focus']()"
+    :tabindex="0"
+    :style="`--level: ${level}`"
+    :data-index="index"
+    @keypress.space.enter.prevent="$emit('select')"
+    @keydown.right="$emit('open')"
+    @keydown.left="$emit('close')"
+    @click="$emit('select')"
+    @focus="$emit('focus')"
   >
     <div class="FileExplorerItem_arrow">
       <slot name="arrow"></slot>
@@ -29,22 +32,27 @@
 <script>
 export default {
   name: 'FileExplorerItem',
+  inheritAttrs: false,
   props: {
     opened: {
       type: Boolean,
       default: false
     },
+    active: {
+      type: Boolean,
+      default: true
+    },
     selected: {
       type: Boolean,
       default: false
     },
-    focused: {
-      type: Boolean,
-      default: false
+    level: {
+      type: Number,
+      default: 0
     },
-    focusable: {
-      type: Boolean,
-      default: true
+    index: {
+      type: Number,
+      default: 0
     }
   }
 };
@@ -64,6 +72,10 @@ export default {
 
   &:hover {
     background-color: #eee;
+  }
+
+  &.-disabled {
+    color: #999;
   }
 
   &.-selected {

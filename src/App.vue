@@ -27,8 +27,7 @@ export default {
         const response = await fetch('/static/node_modules.json');
         const directory = await response.json();
 
-        this.directory = directory;
-        // this.directory = Object.freeze(directory);
+        this.directory = Object.freeze(directory);
       } catch (error) {
         console.error(error);
       } finally {
