@@ -1,28 +1,44 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="App">
+    <FileExplorer v-if="directory" :directory="directory" :loading="loading" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import FileExplorer from '@/components/FileExplorer.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
-}
-</script>
+    FileExplorer
+  },
+  data: () => ({
+    loading: false,
+    directory: null
+  }),
+  async mounted() {
+    this.fetchFiles();
+  },
+  methods: {
+    async fetchFiles() {
+      try {
+        this.loading = true;
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+        const response = await fetch('/static/node_modules.json');
+        const directory = await response.json();
+
+        this.directory = Object.freeze(directory);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.loading = false;
+      }
+    }
+  }
+};
+</script>
+<style lang="scss">
+.App {
+  padding: 10px;
 }
 </style>
